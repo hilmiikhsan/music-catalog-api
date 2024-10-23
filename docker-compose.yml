@@ -1,0 +1,13 @@
+version: "3"
+services:
+  db:
+    image: postgres:latest
+    container_name: local-postgres-fast-campus
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: fastcampus
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: music_catalog_db
+    volumes:
+      - /Users/hilmiikhsan/go/src/fast-campus-project/fastcampus_postgres/db:/var/lib/postgresql/data

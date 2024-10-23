@@ -1,0 +1,6 @@
+service:
+  port: ":9877"
+  secret_jwt: "secretjwt"
+
+database:
+  data_source_name: "postgres://postgres:21012123op@localhost:5432/music_catalog?sslmode=disable"
