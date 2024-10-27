@@ -8,6 +8,7 @@ import (
 //go:generate mockgen -source=handler.go -destination=handler_mock_test.go -package=memberships
 type service interface {
 	SignUp(req memberships.SignUpRequest) error
+	Login(req memberships.LoginRequest) (string, error)
 }
 
 type Handler struct {
@@ -24,4 +25,5 @@ func NewHandler(api *gin.Engine, service service) *Handler {
 func (h *Handler) RegisterRoute() {
 	routes := h.Group("/memberships")
 	routes.POST("/signup", h.SignUp)
+	routes.POST("/login", h.Login)
 }

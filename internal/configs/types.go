@@ -8,7 +8,7 @@ type (
 
 	Service struct {
 		Port      string `mapstructure:"port"`
-		SecretJWT string `mapstructure:"secret_jwt"`
+		SecretKey string `mapstructure:"secret_key"`
 	}
 
 	Database struct {
