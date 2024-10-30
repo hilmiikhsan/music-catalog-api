@@ -2,8 +2,9 @@ package configs
 
 type (
 	Config struct {
-		Service  Service  `mapstructure:"service"`
-		Database Database `mapstructure:"database"`
+		Service       Service       `mapstructure:"service"`
+		Database      Database      `mapstructure:"database"`
+		SpotifyConfig SpotifyConfig `mapstructure:"spotify_config"`
 	}
 
 	Service struct {
@@ -13,5 +14,10 @@ type (
 
 	Database struct {
 		DataSourceName string `mapstructure:"data_source_name"`
+	}
+
+	SpotifyConfig struct {
+		ClientID     string `mapstructure:"client_id"`
+		ClientSecret string `mapstructure:"client_secret"`
 	}
 )

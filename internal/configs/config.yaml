@@ -4,3 +4,8 @@ service:
 
 database:
   data_source_name: "postgres://postgres:21012123op@localhost:5432/music_catalog?sslmode=disable"
+
+spotify_config:
+  client_id: "996dd21a6d6c4c28879476135d11c763"
+  client_secret: "eba0779475544c678fb130a0ff2d99ef"
+  redirect_uri: "http://localhost:9999"

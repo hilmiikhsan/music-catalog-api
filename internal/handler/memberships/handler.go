@@ -18,6 +18,7 @@ type Handler struct {
 
 func NewHandler(api *gin.Engine, service service) *Handler {
 	return &Handler{
+		Engine:  api,
 		service: service,
 	}
 }
