@@ -15,6 +15,10 @@ type SpotifySearchResposes struct {
 	Tracks SpotifyTracks `json:"tracks"`
 }
 
+type SpotifyRecommendationResponse struct {
+	Tracks []SpotifyTrackObject `json:"tracks"`
+}
+
 type SpotifyTracks struct {
 	Href     string               `json:"href"`
 	Limit    int                  `json:"limit"`

@@ -16,18 +16,12 @@ func (h *Handler) Search(c *gin.Context) {
 
 	pageSize, err := strconv.Atoi(pageSizeStr)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "invalid page_size",
-		})
-		return
+		pageSize = 10
 	}
 
 	pageIndex, err := strconv.Atoi(pageIndexStr)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "invalid page_index",
-		})
-		return
+		pageIndex = 1
 	}
 
 	userID := c.GetUint("user_id")
