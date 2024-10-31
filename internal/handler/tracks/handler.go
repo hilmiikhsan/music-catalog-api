@@ -6,11 +6,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/hilmiikhsan/music-catalog/internal/middleware"
 	"github.com/hilmiikhsan/music-catalog/internal/models/spotify"
+	"github.com/hilmiikhsan/music-catalog/internal/models/track_activities"
 )
 
 //go:generate mockgen -source=handler.go -destination=handler_mock_test.go -package=tracks
 type service interface {
-	Search(ctx context.Context, query string, pageSize, pageIndex int) (*spotify.SearchRespose, error)
+	Search(ctx context.Context, query string, pageSize, pageIndex int, userID uint) (*spotify.SearchRespose, error)
+	UpsertTrackActivities(ctx context.Context, userID uint, req track_activities.TrackActivityRequest) error
 }
 
 type Handler struct {
@@ -30,4 +32,5 @@ func (h *Handler) RegisterRoute() {
 	routes.Use(middleware.AuthMiddleware())
 
 	routes.GET("/search", h.Search)
+	routes.POST("/track-activity", h.UpsertTrackActivities)
 }

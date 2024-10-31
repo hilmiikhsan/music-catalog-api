@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/hilmiikhsan/music-catalog/internal/models/spotify"
+	"github.com/hilmiikhsan/music-catalog/pkg/jwt"
 	"github.com/stretchr/testify/assert"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -28,7 +29,7 @@ func TestHandler_Search(t *testing.T) {
 		{
 			name: "success",
 			mockFn: func() {
-				mockSvc.EXPECT().Search(gomock.Any(), "Bruno Mars", 10, 1).Return(&spotify.SearchRespose{
+				mockSvc.EXPECT().Search(gomock.Any(), "Bruno Mars", 10, 1, uint(1)).Return(&spotify.SearchRespose{
 					Items: []spotify.SpotifyTrackObject{
 						{
 							AlbumType:        "single",
@@ -117,7 +118,7 @@ func TestHandler_Search(t *testing.T) {
 		{
 			name: "failed",
 			mockFn: func() {
-				mockSvc.EXPECT().Search(gomock.Any(), "Bruno Mars", 10, 1).Return(nil, assert.AnError)
+				mockSvc.EXPECT().Search(gomock.Any(), "Bruno Mars", 10, 1, uint(1)).Return(nil, assert.AnError)
 			},
 			expectedStatusCode: http.StatusInternalServerError,
 			expectedBody:       spotify.SearchRespose{},
@@ -142,6 +143,11 @@ func TestHandler_Search(t *testing.T) {
 
 			req, err := http.NewRequest(http.MethodGet, endpoint, nil)
 			assert.NoError(t, err)
+
+			token, err := jwt.CreateToken(1, "username", "")
+			assert.NoError(t, err)
+
+			req.Header.Set("Authorization", token)
 
 			h.ServeHTTP(w, req)
 

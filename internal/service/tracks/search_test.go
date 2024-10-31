@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/hilmiikhsan/music-catalog/internal/models/spotify"
+	"github.com/hilmiikhsan/music-catalog/internal/models/track_activities"
 	spotyfyOutbound "github.com/hilmiikhsan/music-catalog/internal/repository/spotify"
 	"github.com/stretchr/testify/assert"
 	gomock "go.uber.org/mock/gomock"
@@ -16,6 +17,11 @@ func Test_service_Search(t *testing.T) {
 	defer ctrlMock.Finish()
 
 	mockSpotifyOutbound := NewMockspotifyOutbound(ctrlMock)
+	mockTrackActivitiesRepo := NewMocktrackActivitiesRepository(ctrlMock)
+
+	isLikeTrue := true
+	isLikeFalse := false
+
 	next := "https://api.spotify.com/v1/search?query=Bruno+Mars&type=track&market=ID&locale=en-US%2Cen%3Bq%3D0.9&offset=10&limit=10"
 
 	type args struct {
@@ -55,6 +61,7 @@ func Test_service_Search(t *testing.T) {
 						Explicit: false,
 						ID:       "5vNRhkKd0yEAg8suGBpjeY",
 						Name:     "APT.",
+						IsLike:   &isLikeTrue,
 					},
 					{
 						AlbumType:        "single",
@@ -72,6 +79,7 @@ func Test_service_Search(t *testing.T) {
 						Explicit: false,
 						ID:       "2plbrEY59IikOBgBGLjaoe",
 						Name:     "Die With A Smile",
+						IsLike:   &isLikeFalse,
 					},
 				},
 				Total:  894,
@@ -129,6 +137,18 @@ func Test_service_Search(t *testing.T) {
 						},
 					},
 				}, nil)
+
+				mockTrackActivitiesRepo.EXPECT().GetBulkSpotifyIDs(gomock.Any(), uint(1), []string{
+					"5vNRhkKd0yEAg8suGBpjeY",
+					"2plbrEY59IikOBgBGLjaoe",
+				}).Return(map[string]track_activities.TrackActivity{
+					"5vNRhkKd0yEAg8suGBpjeY": {
+						IsLike: &isLikeTrue,
+					},
+					"2plbrEY59IikOBgBGLjaoe": {
+						IsLike: &isLikeFalse,
+					},
+				}, nil)
 			},
 		},
 		{
@@ -149,9 +169,10 @@ func Test_service_Search(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mockFn(tt.args)
 			s := &service{
-				spotifyOutbound: mockSpotifyOutbound,
+				spotifyOutbound:           mockSpotifyOutbound,
+				trackActivitiesRepository: mockTrackActivitiesRepo,
 			}
-			got, err := s.Search(context.Background(), tt.args.query, tt.args.pageSize, tt.args.pageIndex)
+			got, err := s.Search(context.Background(), tt.args.query, tt.args.pageSize, tt.args.pageIndex, 1)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("service.Search() error = %v, wantErr %v", err, tt.wantErr)
 				return

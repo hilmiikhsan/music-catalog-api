@@ -26,7 +26,7 @@ func (s *service) Login(req memberships.LoginRequest) (string, error) {
 		return "", err
 	}
 
-	accessToken, err := jwt.CreateToken(int64(user.ID), user.Username, s.cfg.Service.SecretKey)
+	accessToken, err := jwt.CreateToken(user.ID, user.Username, s.cfg.Service.SecretKey)
 	if err != nil {
 		log.Error().Err(err).Msg("failed to create token")
 		return "", err

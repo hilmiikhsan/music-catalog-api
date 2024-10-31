@@ -30,7 +30,9 @@ func (h *Handler) Search(c *gin.Context) {
 		return
 	}
 
-	response, err := h.service.Search(ctx, query, pageSize, pageIndex)
+	userID := c.GetUint("user_id")
+
+	response, err := h.service.Search(ctx, query, pageSize, pageIndex, userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
